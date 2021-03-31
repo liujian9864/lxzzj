@@ -1,0 +1,9 @@
+-------------------------------------------------------------------------------
+Test set: com.lxzzj.consumer.ConsumerApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.799 s <<< FAILURE! - in com.lxzzj.consumer.ConsumerApplicationTests
+contextLoads  Time elapsed: 0.008 s  <<< ERROR!
+java.lang.IllegalStateException: Failed to load ApplicationContext
+Caused by: java.lang.IllegalStateException: java.io.FileNotFoundException: class path resource [config/logback-spring.xml] cannot be resolved to URL because it does not exist
+Caused by: java.io.FileNotFoundException: class path resource [config/logback-spring.xml] cannot be resolved to URL because it does not exist
+

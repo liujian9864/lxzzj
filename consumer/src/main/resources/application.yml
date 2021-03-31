@@ -1,0 +1,153 @@
+server:
+  port: 8027
+spring:
+  mvc:
+    format:
+      date-time: yyyy-MM-dd HH:mm:ss
+  main:
+    allow-bean-definition-overriding: true
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  servlet:
+    #   文件上传大小限制
+    multipart:
+      max-file-size: 50MB
+  #      max-request-size: 100Mb
+  datasource:
+    name: druidDataSource
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      #      url: jdbc:mysql://192.168.1.103:3306/kitty?useSSL=false&useUnicode=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&allowMultiQueries=true&noneBaseStatementAllow=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+      url: jdbc:mysql://122.224.152.194:3306/kitty?useSSL=false&useUnicode=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&allowMultiQueries=true&noneBaseStatementAllow=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+      username: xunlikun
+      password: 159753
+      filters: stat,config
+      max-active: 100
+      initial-size: 1
+      max-wait: 60000
+      min-idle: 1
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: select 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-open-prepared-statements: 50
+      max-pool-prepared-statement-per-connection-size: 20
+  application:
+    name: senbo-financial
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        serviceName: ${spring.application.name}    # 注册到consul的服务名称
+  boot:
+    admin:
+      client:
+        url: "http://localhost:8000"
+        instance:
+          service-base-url: http://localhost:${server.port}
+  zipkin:
+    base-url: http://localhost:9411/
+  sleuth:
+    sampler:
+      probability: 1 #样本采集量，默认为0.1，为了测试这里修改为1，正式环境一般使用默认值。
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+    jedis:
+      pool:
+        max-active: 200
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        #        max-wait: -1
+        # 连接池中的最大空闲连接
+        max-idle: 10
+        # 连接池中的最小空闲连接
+        min-idle: 0
+    # 连接超时时间（毫秒）
+    timeout: 10s
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
+# 开放健康检查接口
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+  health:
+    elasticsearch:
+      enabled: false
+    rabbit:
+      enabled: false
+
+#开启熔断器
+feign:
+  hystrix:
+    enabled: true
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.senbo.erp..*.*.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+# pagehelper
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+senbo:
+  flowRest: http://localhost:8088/
+  fileTempPath: D:\saas
+  #过滤url
+  ignoreUrls:
+    - /swagger-ui.html
+    - /swagger-resources/**
+    - /v2/api-docs
+    - /webjars/springfox-swagger-ui/**
+    - /actuator/**
+    - /error/**
+    - /filterUrl/**
+    - /*Api/**
+
+logging:
+  config: classpath:config/logback-spring.xml
+
+ribbon:
+  ReadTimeout: 10000 #请求处理的超时时间
+  ConnectTimeout: 5000 #请求连接的超时时间
+  MaxAutoRetries: 2 #对当前实例的重试次数
+  MaxAutoRetriesNextServer: 4 #切换实例的重试次数
+  eureka:
+    enabled: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+
+elasticsearch:
+  hostname: 192.168.0.110
+  port: 9200
+  scheme: http
+
+
